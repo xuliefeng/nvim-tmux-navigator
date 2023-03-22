@@ -1,4 +1,4 @@
-local util = require'nvim-tmux-navigation.tmux_util'
+local util = require'nvim-tmux-navigator.tmux_util'
 
 local M = {}
 
