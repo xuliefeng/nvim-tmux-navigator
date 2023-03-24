@@ -86,7 +86,7 @@ function M.setup(user_config)
         vim.api.nvim_set_keymap(
             'n',
             mapping,
-            ":lua require'nvim-tmux-navigation'.NvimTmuxNavigate" .. func .. "()<CR>",
+            ":lua require'nvim-tmux-navigator'.NvimTmuxNavigate" .. func .. "()<CR>",
             { noremap = true, silent = true })
     end
 end
