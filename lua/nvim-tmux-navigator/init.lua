@@ -57,7 +57,7 @@ local function tmux_navigate(direction)
 		local is_same_winnr = (winnr == vim.fn.winnr())
 
 		-- if we're in the same window and zoom is not disabled, tmux should take control
-		if util.should_tmux_control(is_same_winnr, config.disable_when_zoomed) then
+		if util.should_tmux_control(is_same_winnr, config.disable_when_zoomed, direction) then
 			util.tmux_change_pane(direction)
 			tmux_control = true
 		else

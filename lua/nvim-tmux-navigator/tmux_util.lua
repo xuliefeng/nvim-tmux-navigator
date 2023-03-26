@@ -1,6 +1,7 @@
 local util = {}
 
 local tmux_directions = { ["p"] = "l", ["h"] = "L", ["j"] = "D", ["k"] = "U", ["l"] = "R", ["n"] = "t:.+" }
+local tmux_pane_at_directions = { ["h"] = "left", ["j"] = "bottom", ["k"] = "top", ["l"] = "right" }
 
 -- send the tmux command to the server running on the socket
 -- given by the environment variable $TMUX
@@ -18,9 +19,17 @@ local function is_tmux_pane_zoomed()
 	return tmux_command("display-message -p '#{window_zoomed_flag}'") == "1\n"
 end
 
+-- check whether the current tmux pane is zoomed
+local function is_pane_at(direction)
+	-- the output of the tmux command is "1\n", so we have to test against that
+	return tmux_command("display-message -p '#{pane_at_" .. tmux_pane_at_directions[direction] .. "}'") == "1\n"
+end
+
 -- whether tmux should take control over the navigation
-function util.should_tmux_control(is_same_winnr, disable_nav_when_zoomed)
+function util.should_tmux_control(is_same_winnr, disable_nav_when_zoomed, direction)
 	if is_tmux_pane_zoomed() and disable_nav_when_zoomed then
+		return false
+	elseif is_pane_at(direction) then
 		return false
 	end
 	return is_same_winnr
@@ -28,7 +37,7 @@ end
 
 -- change the current pane according to direction
 function util.tmux_change_pane(direction)
-	tmux_command("if-shell -F '#{pane_at_left}' '' select-pane -" .. tmux_directions[direction])
+	tmux_command("select-pane -" .. tmux_directions[direction])
 end
 
 -- capitalization util, only capitalizes the first character of the whole word
